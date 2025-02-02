@@ -33,12 +33,11 @@ class DocumentConverter:
         try:
             pandoc_args = [
                 "pandoc",
-                "--pdf-engine=pdftotext",  # Explicitly use Poppler's tool
-                str(self.input_file),
+                str(self.input_file),  # Input file
                 "-o",
-                str(self.markdown_output),
+                str(self.markdown_output),  # Output file
                 "--extract-media",
-                str(self.media_dir)
+                str(self.media_dir)  # Media directory
             ]
             result = subprocess.run(pandoc_args, capture_output=True, check=True)
             return True, result.stdout.decode()
