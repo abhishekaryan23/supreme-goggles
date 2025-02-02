@@ -1,2 +1,5 @@
 gradio
 pymupdf4llm
+transformers
+torch
+pillow
