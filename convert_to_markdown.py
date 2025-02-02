@@ -5,6 +5,9 @@ import shutil
 from pathlib import Path
 import pymupdf
 
+# Import image analysis functions
+from img_analysis import generate_image_descriptions, save_descriptions_to_markdown
+
 class DocumentConverter:
     def __init__(self, input_file: str, output_dir: str):
         self.input_file = Path(input_file)
@@ -78,7 +81,15 @@ class DocumentConverter:
                     "--extract-media",
                     str(self.media_dir)
                 ], check=True)
-            return True, "Conversion successful"
+            
+            # Enrich Markdown with image descriptions
+            if self.markdown_output.exists() and self.media_dir.exists():
+                save_descriptions_to_markdown(self.markdown_output, self.media_dir)
+                print("Image descriptions added to Markdown")
+            else:
+                raise FileNotFoundError("Markdown file or media directory not found")
+
+            return True, "Conversion and enrichment successful"
         except subprocess.CalledProcessError as e:
             return False, f"Pandoc failed: {e.stderr.decode()}"
         except Exception as e:
